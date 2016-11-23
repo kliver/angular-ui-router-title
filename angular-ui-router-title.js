@@ -3,7 +3,7 @@
  *
  * @link https://github.com/nonplus/angular-ui-router-title
  *
- * @license angular-ui-router-title v0.1.0
+ * @license angular-ui-router-title v0.1.1
  * (c) Copyright Stepan Riha <github@nonplus.net>
  * License MIT
  */
@@ -14,36 +14,9 @@
 var documentTitleCallback = undefined;
 var defaultDocumentTitle = document.title;
 angular.module("ui.router.title", ["ui.router"])
-    .provider("$title", function $titleProvider() {
-    return {
-        documentTitle: function (cb) {
-            documentTitleCallback = cb;
-        },
-        $get: ["$state", function ($state) {
-                return {
-                    title: function () { return getTitleValue($state.$current.locals.globals["$title"]); },
-                    breadCrumbs: function () {
-                        var $breadcrumbs = [];
-                        var state = $state.$current;
-                        while (state) {
-                            if (state["resolve"] && state["resolve"].$title) {
-                                $breadcrumbs.unshift({
-                                    title: getTitleValue(state.locals.globals["$title"]),
-                                    state: state["self"].name,
-                                    stateParams: state.locals.globals["$stateParams"]
-                                });
-                            }
-                            state = state["parent"];
-                        }
-                        return $breadcrumbs;
-                    }
-                };
-            }]
-    };
-})
     .run(["$rootScope", "$timeout", "$title", "$injector", function ($rootScope, $timeout, $title, $injector) {
-        $rootScope.$on("$stateChangeSuccess", function () {
-            var title = $title.title();
+        $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams, options, $transition) {
+            var title = $transition.getResolvable('$title').data;
             $timeout(function () {
                 $rootScope.$title = title;
                 var documentTitle = documentTitleCallback ? $injector.invoke(documentTitleCallback) : title || defaultDocumentTitle;
