@@ -3,7 +3,7 @@
  *
  * @link https://github.com/nonplus/angular-ui-router-title
  *
- * @license angular-ui-router-title v0.1.1
+ * @license angular-ui-router-title v0.1.0
  * (c) Copyright Stepan Riha <github@nonplus.net>
  * License MIT
  */
@@ -14,7 +14,7 @@
 var documentTitleCallback = undefined;
 var defaultDocumentTitle = document.title;
 angular.module("ui.router.title", ["ui.router"])
-    .run(["$rootScope", "$timeout", "$title", "$injector", function ($rootScope, $timeout, $title, $injector) {
+    .run(["$rootScope", "$timeout", "$injector", function ($rootScope, $timeout, $injector) {
         $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams, options, $transition) {
             var title = $transition.getResolvable('$title').data;
             $timeout(function () {
@@ -22,7 +22,6 @@ angular.module("ui.router.title", ["ui.router"])
                 var documentTitle = documentTitleCallback ? $injector.invoke(documentTitleCallback) : title || defaultDocumentTitle;
                 document.title = documentTitle;
             });
-            $rootScope.$breadcrumbs = $title.breadCrumbs();
         });
     }]);
 function getTitleValue(title) {

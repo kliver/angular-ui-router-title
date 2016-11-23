@@ -4,10 +4,9 @@ let documentTitleCallback: (title: string) => string = undefined;
 let defaultDocumentTitle = document.title;
 
 angular.module("ui.router.title", ["ui.router"])
-	.run(["$rootScope", "$timeout", "$title", "$injector", function(
+	.run(["$rootScope", "$timeout", "$injector", function(
 		$rootScope: ng.IRootScopeService,
 		$timeout: ng.ITimeoutService,
-		$title: ng.ui.ITitleService,
 		$injector
 	) {
 
@@ -18,8 +17,6 @@ angular.module("ui.router.title", ["ui.router"])
 				const documentTitle = documentTitleCallback ? $injector.invoke(documentTitleCallback) : title || defaultDocumentTitle;
 				document.title = documentTitle;
 			});
-
-			$rootScope.$breadcrumbs = $title.breadCrumbs();
 		});
 
 	}]);
