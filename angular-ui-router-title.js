@@ -14,10 +14,10 @@
 var documentTitleCallback = undefined;
 var defaultDocumentTitle = document.title;
 angular.module("ui.router.title", ["ui.router"])
-    .run(["$rootScope", "$timeout", "$injector", function ($rootScope, $timeout, $injector) {
-        $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams, options, $transition) {
-            var title = $transition.getResolvable('$title').data;
-            $timeout(function () {
+    .run(["$rootScope", "$timeout", "$transitions", "$injector", function ($rootScope, $timeout, $transitions, $injector) {
+        $transitions.onStart({}, function (trans) {
+            trans.promise.finally(function () {
+                var title = trans.injector().get('$title');
                 $rootScope.$title = title;
                 var documentTitle = documentTitleCallback ? $injector.invoke(documentTitleCallback) : title || defaultDocumentTitle;
                 document.title = documentTitle;
